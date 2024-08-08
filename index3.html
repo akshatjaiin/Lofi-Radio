@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Click Overlay</title>
+    <style>
+        .video-container {
+            position: relative;
+            width: 560px; /* Match the width of the iframe */
+            height: 315px; /* Match the height of the iframe */
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-container .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <iframe id="youtube-iframe" width="560" height="315" 
+        src="https://www.youtube.com/embed/rUxyKA_-grg?controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=0&autoplay=1" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+        </iframe>
+        <div class="overlay" id="overlay">
+            <!-- Your overlay content goes here -->
+            <p>Click to play the video</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var overlay = document.getElementById('overlay');
+            var iframe = document.getElementById('youtube-iframe');
+
+            // Temporarily enable pointer events for overlay
+            overlay.style.pointerEvents = 'auto';
+
+            // Simulate click event
+            overlay.addEventListener('click', function() {
+                // Trigger play action on the iframe
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            });
+
+            // Automatically trigger the click on the overlay
+            overlay.click();
+        });
+    </script>
+</body>
+</html>
