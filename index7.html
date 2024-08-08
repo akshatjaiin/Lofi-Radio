@@ -6,9 +6,6 @@
     <title>Resizable Iframe</title>
     <style>
         body {
-            display: flex;
-            justify-content: center; /* Center the container horizontally */
-            align-items: center; /* Center the container vertically */
             height: 100vh; /* Set the height of the body to the viewport height */
             margin: 0; /* Remove default margin */
             background-color: #f0f0f0; /* Light background for better visibility */
@@ -16,32 +13,35 @@
 
         .iframeoverlay {
             position: relative;
-            width: 560px; /* Initial width */
-            height: 315px; /* Initial height */
+            width: 100px; /* Initial width */
+            height: 30px; /* Initial height */
             overflow: hidden; /* Hide overflow */
-            transition: transform 0.5s ease; /* Smooth transition for transform */
+            transition: width 0.3s, height 0.3s; /* Smooth transition for resizing */
             border: 1px solid #ccc; /* Optional: border for visibility */
-        }
-
-        .iframeoverlay.moved {
-            transform: translateX(100%); /* Move the iframe to the right side */
         }
 
         .iframeoverlay iframe {
             width: 100%;
             height: 100%;
             border: none; /* Remove default border */
+            display: none; /* Initially hide the iframe */
         }
 
-        .iframeoverlay .overlay {
+        .iframeoverlay.zoomed iframe {
+            display: block; /* Show the iframe when zoomed */
+        }
+
+        .text-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+            top: 10%;
+            left: 10%;
+            transform: translate(-50%, -50%); /* Center the text */
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            color: white; /* Text color */
+            padding: 10px 20px; /* Padding for the text */
+            border-radius: 5px; /* Rounded corners */
             cursor: pointer; /* Change cursor to pointer to indicate clickability */
-            pointer-events: auto; /* Enable pointer events on the overlay */
+            z-index: 1; /* Ensure text is on top */
         }
     </style>
 </head>
@@ -55,7 +55,7 @@
             referrerpolicy="strict-origin-when-cross-origin" 
             allowfullscreen>
         </iframe>
-        <div class="overlay" onclick="moveIframe()"></div>
+        <div class="text-overlay" onclick="resizeIframe()">Click to Play and Resize</div>
     </div>
 
     <script>
@@ -71,12 +71,38 @@
         }
 
         function onPlayerReady(event) {
-            player.playVideo();
+            // Initially, we don't play the video
         }
 
-        function moveIframe() {
+        function resizeIframe() {
             var container = document.getElementById('iframeContainer');
-            container.classList.toggle('moved');
+            var iframe = document.getElementById('myVideo');
+
+            // Toggle zoom state
+            container.classList.toggle('zoomed');
+
+            // Check if the iframe is now zoomed
+            if (container.classList.contains('zoomed')) {
+                // Show the iframe and play the video
+                iframe.style.display = 'block'; // Show the iframe
+                player.playVideo(); // Play the video
+            } else {
+                // Hide the iframe and pause the video
+                iframe.style.display = 'none'; // Hide the iframe
+                player.pauseVideo(); // Pause the video
+            }
+
+            // Toggle between two sizes
+            if (!isResized) {
+                container.style.width = '560px'; // New width
+                container.style.height = '450px'; // New height
+               // container.style.left = '60vw';
+
+            } else {
+                container.style.width = '560px'; // Original width
+                container.style.height = '315px'; // Original height
+            }
+            isResized = !isResized;
         }
 
         // Load the YouTube API asynchronously
