@@ -1,0 +1,10 @@
+const liveUurls = ['https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv', 
+    'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC',
+    'https://www.youtube.com/live/36YnV9STBqc?si=POYUYRaWpgwJP-M0',
+    'https://www.youtube.com/live/jfKfPfyJRdk?si=7Q04P0ves89HW2cv',
+    'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn',
+    'https://www.youtube.com/live/JWlKA9wmO64?si=5lW1F10y3LoEYJJC',
+    'https://www.youtube.com/live/wDA4kdgC0bc?si=ubfq6loGFcKXhA52',
+    'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe',
+    'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg',
+]
