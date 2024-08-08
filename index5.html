@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Iframe</title>
+    <style>
+        /* CSS styles remain the same */
+    </style>
+</head>
+<body>
+    <div class="iframeoverlay" id="iframeContainer">
+        <iframe
+            id="myVideo" 
+            src="https://www.youtube.com/embed/rUxyKA_-grg?controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&enablejsapi=1" 
+            title="lofi hip hop radio 💤 - beats to sleep/chill to" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen>
+        </iframe>
+        <div class="overlay" onclick="resizeIframe()"></div>
+    </div>
+
+    <script>
+        let isResized = false;
+        let player;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('myVideo', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            player.playVideo();
+        }
+
+        function resizeIframe() {
+            var container = document.getElementById('iframeContainer');
+            
+            // Toggle between two sizes
+            if (!isResized) {
+                container.style.width = '800px';
+                container.style.height = '450px';
+            } else {
+                container.style.width = '560px';
+                container.style.height = '315px';
+            }
+            isResized = !isResized;
+
+            // Pause the video before resizing
+            player.pauseVideo();
+
+            // Ensure the video continues playing after resizing
+            setTimeout(function() {
+                player.playVideo();
+            }, 500); // Delay of 500ms to ensure the video starts playing after resizing
+        }
+
+        // Load the YouTube API asynchronously
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
+</body>
+</html>
