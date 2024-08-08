@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream Selector</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+        }
+        li {
+            margin: 10px; /* Space between items */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        iframe {
+            width: 560px;
+            height: 315px;
+            border: none; /* Remove default border */
+        }
+    </style>
+</head>
+<body>
+    <ul id="liveStreamList"></ul>
+
+    <script src="iframe.js"></script>
+</body>
+</html>
