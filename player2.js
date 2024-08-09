@@ -20,14 +20,16 @@ function onYouTubeIframeAPIReady() {
         height: '100%',
         width: '100%',
         playerVars: {
-            'playsinline': 1,
-            'controls': 0,
-            'disablekb': 1,
-            'modestbranding': 0,
-            'showinfo': 0,
-            'rel': 0,
-            'iv_load_policy': 3,
-            'fs': 0
+            'playsinline': 1,          // Play the video inline on mobile
+            'controls': 0,             // Hide the player controls
+            'disablekb': 1,           // Disable keyboard controls
+            'modestbranding': 1,       // Minimize YouTube branding
+            'showinfo': 0,            // Do not show video title and uploader before the video starts
+            'rel': 0,                  // Do not show related videos at the end
+            'iv_load_policy': 3,       // Do not show video annotations
+            'fs': 0,                   // Disable fullscreen button
+            'cc_load_policy': 0,       // Disable closed captions by default
+            'autoplay': 1,             // Autoplay the video (optional)
         },
         events: {
             'onReady': onPlayerReady,
