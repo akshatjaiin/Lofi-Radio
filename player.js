@@ -1,35 +1,34 @@
 const liveStreams = [
     { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
-    { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
-    { name: 'Stream 3', url: 'https://www.youtube.com/live/Yw8co39m3GQ?si=UnDXZzfOfGT3aWUV' },
-    { name: 'Stream 4', url: 'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn' },
-    { name: 'Stream 6', url: 'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe' },
-    { name: 'Stream 7', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' },
-    {url: 'https://www.youtube.com/live/_uMuuHk_KkQ?si=LoSo3lmZhpYXd6u0'},
-    {name: 'lofi-girl anime', url: 'https://www.youtube.com/live/Na0w3Mz46GA?si=P0G5kwg55FCI2rS-'},
-    {name: 'peaceful piano', url: 'https://www.youtube.com/live/4oStw0r33so?si=SMtw_Sm2JmWeAhOd'},
+    { name: 'Chill Beats', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
+    { name: 'Relaxing Vibes', url: 'https://www.youtube.com/live/Yw8co39m3GQ?si=UnDXZzfOfGT3aWUV' },
+    { name: 'Ambient Sounds', url: 'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn' },
+    { name: 'Lofi Chill', url: 'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe' },
+    { name: 'Mellow Mix', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' },
+    { name: 'Dreamy Tunes', url: 'https://www.youtube.com/live/_uMuuHk_KkQ?si=LoSo3lmZhpYXd6u0' },
+    { name: 'Lofi-Girl Anime', url: 'https://www.youtube.com/live/Na0w3Mz46GA?si=P0G5kwg55FCI2rS-' },
+    { name: 'Peaceful Piano', url: 'https://www.youtube.com/live/4oStw0r33so?si=SMtw_Sm2JmWeAhOd' },
 ];
 
 let player;
 let playerReady = false;
 let currentVideoIndex = 0; // Track the current video index
-const apiKey = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ';
 
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         height: '100%',
         width: '100%',
         playerVars: {
-            'playsinline': 1,          // Play the video inline on mobile
-            'controls': 0,             // Hide the player controls
-            'disablekb': 1,           // Disable keyboard controls
-            'modestbranding': 1,       // Minimize YouTube branding
-            'showinfo': 0,            // Do not show video title and uploader before the video starts
-            'rel': 0,                  // Do not show related videos at the end
-            'iv_load_policy': 3,       // Do not show video annotations
-            'fs': 0,                   // Disable fullscreen button
-            'cc_load_policy': 0,       // Disable closed captions by default
-            'autoplay': 1,             // Autoplay the video (optional)
+            'playsinline': 1,
+            'controls': 0,
+            'disablekb': 1,
+            'modestbranding': 1,
+            'showinfo': 0,
+            'rel': 0,
+            'iv_load_policy': 3,
+            'fs': 0,
+            'cc_load_policy': 0,
+            'autoplay': 1,
         },
         events: {
             'onReady': onPlayerReady,
@@ -37,6 +36,7 @@ function onYouTubeIframeAPIReady() {
         }
     });
 }
+
 function onPlayerReady(event) {
     playerReady = true;
     populateVideoList();
@@ -45,31 +45,11 @@ function onPlayerReady(event) {
 
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
-        // Video is playing
         playButton.style.display = 'none';
         pauseButton.style.display = 'block';
     } else {
-        // Video is not playing
         playButton.style.display = 'block';
         pauseButton.style.display = 'none';
-    }
-}
-
-async function fetchVideoTitle(videoId) {
-    try {
-        const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (data.items.length > 0) {
-            return data.items[0].snippet.title;
-        } else {
-            return 'Unknown Title';
-        }
-    } catch (error) {
-        console.error('Error fetching video title:', error);
-        return 'Error fetching title';
     }
 }
 
@@ -88,11 +68,9 @@ function populateVideoList() {
     const videoItems = document.getElementById('videoItems');
     videoItems.innerHTML = '';
 
-    liveStreams.forEach(async (stream, index) => {
-        const videoId = stream.url.split('/live/')[1].split('?')[0];
-        const title = await fetchVideoTitle(videoId);
+    liveStreams.forEach((stream, index) => {
         const li = document.createElement('li');
-        li.textContent = title;
+        li.textContent = stream.name; // Use the name property directly
         li.addEventListener('click', () => {
             currentVideoIndex = index;
             loadVideo(stream.url);
@@ -128,6 +106,7 @@ pauseButton.addEventListener('click', function() {
 volumeSlider.addEventListener('input', function() {
     player.setVolume(this.value);
 });
+
 if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {
     onYouTubeIframeAPIReady();
 } else {
