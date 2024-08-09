@@ -4,146 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Live Stream Player</title>
-    <style>
-        body {
-            display: flex;
-            font-family: Arial, sans-serif;
-            height: 100vh; /* Set the height of the body to 100% of the viewport */
-            margin: 0; /* Remove default margins */
-        }
-        #logo {
-          height: 50px;
-          background-color: black;
-          margin-bottom: 40px;
-          color: palevioletred;
-        }
-        #videoList {
-            width: 200px;
-            padding: 10px;
-            border-right: 1px solid #ccc;
-            overflow-y: auto; /* Allow scrolling if the list is too long */
-        }
-        #videoPlayer {
-            flex-grow: 1; /* Allow this section to grow and fill available space */
-            background-color: black;
-            display: flex; /* Use flexbox for the player container */
-            justify-content: center; /* Center the player horizontally */
-            align-items: center; /* Center the player vertically */
-        }
-        #player {
-            width: 100%; /* Make the player take the full width of the container */
-            height: 100%; /* Make the player take the full height of the container */
-        }
-        #videoList li {
-            list-style: none;
-            padding: 5px;
-            cursor: pointer;
-        }
-        #videoList li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
+
 <body>
+
     <div id="videoList">
-      <div id="logo">My Lovely Lofi</div>
+        <div id="logo">My Lovely Lofi</div>
+        <ul id="videoItems"></ul> <!-- Unordered list to hold video items -->
+
+        <div id="socialLinks"> <!-- Separate section for social media links -->
+            <div class="social-section" style="background-color: aqua; height: 60px;">
+                <a href="https://github.com/akshatjaiin" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://instagram.com/akshat_senpai" target="_blank">
+                    <i class="fab fa-twitter"></i> Twitter
+                </a>
+                <a href="ko-fi" target="_blank">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+            </div>
+        </div>
     </div>
+
     <div id="videoPlayer">
         <div id="player"></div>
     </div>
 
-    <script>
-        const liveStreams = [
-            { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
-            { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
-            { name: 'Stream 3', url: 'https://www.youtube.com/live/Yw8co39m3GQ?si=UnDXZzfOfGT3aWUV' },
-            { name: 'Stream 4', url: 'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn' },
-            { name: 'Stream 6', url: 'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe' },
-            { name: 'Stream 7', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' },
-            {url: 'https://www.youtube.com/live/_uMuuHk_KkQ?si=LoSo3lmZhpYXd6u0'},
-            {name: 'lofi-girl anime', url: 'https://www.youtube.com/live/Na0w3Mz46GA?si=P0G5kwg55FCI2rS-'},
-            {name: 'peaceful piano', url: 'https://www.youtube.com/live/4oStw0r33so?si=SMtw_Sm2JmWeAhOd'},
-
-        ];
-
-        let player;
-        let playerReady = false; // Track if the player is ready
-        const apiKey = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ'; // Replace with your YouTube Data API key
-
-        function onYouTubeIframeAPIReady() {
-            // Create the player when the API is ready
-            player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                playerVars: {
-                    'playsinline': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            playerReady = true; // Set the player as ready
-            console.log('Player is ready'); // Debugging message
-            populateVideoList(); // Populate the video list when player is ready
-        }
-
-        function onPlayerStateChange(event) {
-            // Handle state changes if needed
-        }
-
-        async function fetchVideoTitle(videoId) {
-            try {
-                const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                if (data.items.length > 0) {
-                    return data.items[0].snippet.title; // Return video title
-                } else {
-                    return 'Unknown Title'; // Fallback title
-                }
-            } catch (error) {
-                console.error('Error fetching video title:', error);
-                return 'Error fetching title'; // Fallback title on error
-            }
-        }
-
-        function loadVideo(url) {
-            const videoId = url.split('/live/')[1].split('?')[0]; // Extract video ID
-            console.log('Attempting to load video:', videoId); // Debugging message
-            
-            // Check if the player is ready
-            if (playerReady) {
-                player.loadVideoById(videoId); // Load the selected video
-            } else {
-                console.error('Player not ready'); // Log error if player is not ready
-            }
-        }
-
-        function populateVideoList() {
-            const videoList = document.getElementById('videoList');
-            liveStreams.forEach(async (stream) => {
-                const videoId = stream.url.split('/live/')[1].split('?')[0];
-                const title = await fetchVideoTitle(videoId);
-                const li = document.createElement('li');
-                li.textContent = title;
-                li.addEventListener('click', () => loadVideo(stream.url));
-                videoList.appendChild(li);
-            });
-        }
-
-        // Check if the YouTube API is loaded
-        if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {
-            onYouTubeIframeAPIReady(); // Initialize the player immediately if the API is ready
-        } else {
-            console.error('YouTube IFrame API is not loaded'); // Log error if API is not loaded
-        }
-    </script>
+    <script src="player.js"></script>
 </body>
 </html>

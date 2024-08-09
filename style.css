@@ -1,0 +1,64 @@
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    height: 100vh; /* Set the height of the body to 100% of the viewport */
+    margin: 0; /* Remove default margins */
+    /* Change the flex direction to column */
+    }
+
+#logo {
+    height: 50px;
+    background-color: black;
+    color: palevioletred;
+}
+
+#videoList {
+    display: flex; /* Use flexbox for the video list container */
+    flex-direction: column; /* Arrange items vertically */
+    width: 200px;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto; /* Allow scrolling if the list is too long */
+}
+
+#videoPlayer {
+    flex-grow: 1; /* Allow this section to grow and fill available space */
+    background-color: black;
+    display: flex; /* Use flexbox for the player container */
+    justify-content: center; /* Center the player horizontally */
+    align-items: center; /* Center the player vertically */
+}
+
+#player {
+    width: 100%; /* Make the player take the full width of the container */
+    height: 100%; /* Make the player take the full height of the container */
+}
+
+#videoList li {
+    list-style: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#videoList li:hover {
+    background-color: #f0f0f0;
+}
+
+.social-section {
+    display: flex; /* Use flexbox for the social section */
+    justify-content: center; /* Center the links horizontally */
+    align-items: center; /* Center the links vertically */
+    background-color: aqua;
+    height: 60px;
+    border-top: 1px solid #ccc; /* Add a top border to separate from the video list */
+}
+
+.social-section a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.social-section a:hover {
+    color: #007bff;
+}
