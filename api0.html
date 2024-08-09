@@ -12,7 +12,10 @@
             margin: 0; /* Remove default margins */
         }
         #logo {
-          
+          height: 50px;
+          background-color: black;
+          margin-bottom: 40px;
+          color: palevioletred;
         }
         #videoList {
             width: 200px;
@@ -43,7 +46,9 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
-    <div id="videoList"></div>
+    <div id="videoList">
+      <div id="logo">My Lovely Lofi</div>
+    </div>
     <div id="videoPlayer">
         <div id="player"></div>
     </div>
@@ -52,16 +57,19 @@
         const liveStreams = [
             { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
             { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
-            { name: 'Stream 3', url: 'https://www.youtube.com/live/jfKfPfyJRdk?si=7Q04P0ves89HW2cv' },
+            { name: 'Stream 3', url: 'https://www.youtube.com/live/Yw8co39m3GQ?si=UnDXZzfOfGT3aWUV' },
             { name: 'Stream 4', url: 'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn' },
-            { name: 'Stream 5', url: 'https://www.youtube.com/live/wDA4kdgC0bc?si=ubfq6loGFcKXhA52' },
             { name: 'Stream 6', url: 'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe' },
-            { name: 'Stream 7', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' }
+            { name: 'Stream 7', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' },
+            {url: 'https://www.youtube.com/live/_uMuuHk_KkQ?si=LoSo3lmZhpYXd6u0'},
+            {name: 'lofi-girl anime', url: 'https://www.youtube.com/live/Na0w3Mz46GA?si=P0G5kwg55FCI2rS-'},
+            {name: 'peaceful piano', url: 'https://www.youtube.com/live/4oStw0r33so?si=SMtw_Sm2JmWeAhOd'},
+            
         ];
 
         let player;
         let playerReady = false; // Track if the player is ready
-        const apiKey = 'YOUR_YOUTUBE_DATA_API_KEY'; // Replace with your YouTube Data API key
+        const apiKey = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ'; // Replace with your YouTube Data API key
 
         function onYouTubeIframeAPIReady() {
             // Create the player when the API is ready
