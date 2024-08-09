@@ -1,3 +1,5 @@
+require('dotenv').config();
+const api = process.env.API
 const liveStreams = [
     { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
     { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
@@ -13,7 +15,7 @@ const liveStreams = [
 
 let player;
 let playerReady = false; // Track if the player is ready
-const apiKey = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ'; // Replace with your YouTube Data API key
+const apiKey = api; // Replace with your YouTube Data API key
 
 function onYouTubeIframeAPIReady() {
     // Create the player when the API is ready
