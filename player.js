@@ -84,6 +84,7 @@ function populateVideoList() {
     videoItems.innerHTML = '';
 
     liveStreams.forEach(async (stream) => {
+        console.log("stream: " + stream)
         const videoId = stream.url.split('/live/')[1].split('?')[0];
         const title = await fetchVideoTitle(videoId);
         const li = document.createElement('li');
