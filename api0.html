@@ -47,13 +47,13 @@
 
     <script>
         const liveStreams = [
-            'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv',
-            'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC',
-            'https://www.youtube.com/live/jfKfPfyJRdk?si=7Q04P0ves89HW2cv',
-            'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn',
-            'https://www.youtube.com/live/wDA4kdgC0bc?si=ubfq6loGFcKXhA52',
-            'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe',
-            'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg'
+            { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
+            { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
+            { name: 'Stream 3', url: 'https://www.youtube.com/live/jfKfPfyJRdk?si=7Q04P0ves89HW2cv' },
+            { name: 'Stream 4', url: 'https://www.youtube.com/live/S_MOd40zlYU?si=PaM8mr_TM4VHd_gn' },
+            { name: 'Stream 5', url: 'https://www.youtube.com/live/wDA4kdgC0bc?si=ubfq6loGFcKXhA52' },
+            { name: 'Stream 6', url: 'https://www.youtube.com/live/qH3fETPsqXU?si=9dZWMZe33X_dFiAe' },
+            { name: 'Stream 7', url: 'https://www.youtube.com/live/wkhLHTmS_GI?si=9_BA1Dv4HLj3Xqeg' }
         ];
 
         let player;
@@ -63,16 +63,16 @@
         function onYouTubeIframeAPIReady() {
             // Create the player when the API is ready
             player = new YT.Player('player', {
-                height: '390',
-                width: '640',
+                height: '100%', // Set height to 100%
+                width: '100%', // Set width to 100%
                 playerVars: {
                     'playsinline': 1
                 },
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
-                } // Correctly close the events object here
-            }); // Correctly close the YT.Player constructor here
+                }
+            });
         }
 
         function onPlayerReady(event) {
@@ -104,12 +104,12 @@
 
         // Populate the video list
         const videoList = document.getElementById('videoList');
-        liveStreams.forEach(async (url) => {
-            const videoId = url.split('/live/')[1].split('?')[0]; // Extract video ID
+        liveStreams.forEach(async (stream) => {
+            const videoId = stream.url.split('/live/')[1].split('?')[0]; // Extract video ID
             const title = await fetchVideoTitle(videoId); // Fetch video title
             const li = document.createElement('li');
             li.textContent = title; // Display the video title
-            li.addEventListener('click', () => loadVideo(url)); // Load video on click
+            li.addEventListener('click', () => loadVideo(stream.url)); // Load video on click
             videoList.appendChild(li); // Append to the list
         });
 
