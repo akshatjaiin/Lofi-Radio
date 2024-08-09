@@ -35,16 +35,18 @@
         <div id="player"></div>
         <div id="playerOverlay">
             <div id="controls">
-                <img src="svgs/previous.svg" alt="previous" class="control">
-                <img src="svgs/pause.svg" alt="pause" class="control">
-                <img src="svgs/previous.svg" alt="previous" class="control">
-                <img src="svgs/volume.svg" alt="volume" class="control">
+                <img src="svgs/previous.svg" alt="previous" class="control" id="previous">
+                <img src="svgs/pause.svg" alt="pause" class="control" id="play">
+                <img src="svgs/play.svg" alt="play"  class="control" id="pause">
+                <img src="svgs/next.svg" alt="next" class="control" id="next">
+                <img src="svgs/volume.svg" alt="volume" class="control" id="volume">
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
             </div>
         </div> 
     </div>
     
     
 
-    <script src="player2.js"></script>
+    <script src="player.js"></script>
 </body>
 </html>

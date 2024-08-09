@@ -1,5 +1,3 @@
-require('dotenv').config();
-const api = process.env.API
 const liveStreams = [
     { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
     { name: 'Stream 2', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
@@ -15,7 +13,7 @@ const liveStreams = [
 
 let player;
 let playerReady = false; // Track if the player is ready
-const apiKey = api; // Replace with your YouTube Data API key
+const apiKey = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ'; // Replace with your YouTube Data API key
 
 function onYouTubeIframeAPIReady() {
     // Create the player when the API is ready
@@ -94,6 +92,34 @@ function populateVideoList() {
         videoItems.appendChild(li);
     });
 }
+
+const pauseButton = document.getElementById('pause');
+const playButton = document.getElementById('play');
+const volumeSlider = document.getElementById('volume-slider')
+// Initially show the play button
+playButton.style.display = 'block';
+pauseButton.style.display = 'none';
+
+// Add click event listener to the play button
+playButton.addEventListener('click', function() {
+    playButton.style.display = 'none';  // Hide play button
+    pauseButton.style.display = 'block'; // Show pause button
+    player.stopVideo()
+    // Add any additional logic for play action here
+});
+
+// Add click event listener to the pause button
+pauseButton.addEventListener('click', function() {
+    pauseButton.style.display = 'none';  // Hide pause button
+    playButton.style.display = 'block';   // Show play button
+    player.playVideo()
+    // Add any additional logic for pause action here
+});
+
+volumeSlider.addEventListener('input',function() {
+    console.log("Volume changed to:", this.value);
+    player.setVolume(this.value)
+})
 
 // Check if the YouTube API is loaded
 if (typeof YT !== 'undefined' && typeof YT.Player !== 'undefined') {

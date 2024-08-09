@@ -1,5 +1,4 @@
-require('dotenv').config();
-const api = process.env.API
+const api = 'AIzaSyAx0qYkyxPKAE717-9My8dG5IBMK3gwJHQ'
 let player;
 let playerReady = false; // Track if the player is ready
 const apiKey = api; // Replace with your YouTube Data API key
