@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aesthetic Lofi</title>
+    <!-- CDN Links for Font Awesome Icons and YouTube API -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --bg-dark: #1a1a1a;
+            --bg-light: #2d2d2d;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        #videoList {
+            width: 300px;
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+
+        #logo {
+            padding: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .now-playing {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px;
+            border-radius: 8px;
+        }
+
+        .now-playing h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        #videoItems {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        #videoItems li {
+            list-style: none;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #videoItems li:hover {
+            background-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        #videoItems li.active {
+            background-color: var(--secondary-color);
+        }
+
+        #videoPlayer {
+            flex-grow: 1;
+            position: relative;
+            background-color: black;
+        }
+
+        #player {
+            width: 100%;
+            height: 100%;
+        }
+
+        #playerOverlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+
+        #controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .control {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+        }
+
+        .control:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .control i {
+            font-size: 18px;
+        }
+
+        #volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        #volume-slider {
+            width: 100px;
+            height: 4px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        #volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #progress-bar-fill {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        @media (max-width: 768px) {
+            #videoList {
+                position: absolute;
+                left: -300px;
+                height: 100%;
+                z-index: 10;
+            }
+
+            #videoList.show {
+                left: 0;
+            }
+        }
+
+        .social-links {
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        #visualizer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 100px;
+        }
+
+        .visualizer-bar {
+            position: absolute;
+            bottom: 0;
+            background: var(--primary-color);
+            width: 10px;
+            transition: height 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <button class="toggle-sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="videoList">
+        <div id="logo">Aesthetic Lofi</div>
+        <div class="now-playing">
+            <h3>Now Playing</h3>
+            <span id="current-track">Select a track</span>
+        </div>
+        <ul id="videoItems"></ul>
+        <div class="social-links">
+            <a href="https://github.com/akshatjaiin" target="_blank">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://www.buymeacoffee.com/sensai" target="_blank">
+                <i class="fas fa-coffee"></i>
+            </a>
+        </div>
+    </div>
+
+    <div id="videoPlayer">
+        <div id="player"></div>
+        <div id="visualizer"></div>
+        <div id="playerOverlay">
+            <div id="progress-bar">
+                <div id="progress-bar-fill"></div>
+            </div>
+            <div id="controls">
+                <button class="control" id="shuffle">
+                    <i class="fas fa-random"></i>
+                </button>
+                <button class="control" id="previous">
+                    <i class="fas fa-backward"></i>
+                </button>
+                <button class="control" id="play">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control" id="pause">
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button class="control" id="next">
+                    <i class="fas fa-forward"></i>
+                </button>
+                <button class="control" id="loop">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <div id="volume-control">
+                    <button class="control" id="volume">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const liveStreams = [
+            { name: 'Lofi 1', url: 'https://www.youtube.com/live/5yx6BWlEVcY?si=ebplKrv07gmWR-mv' },
+            { name: 'Chill Beats', url: 'https://www.youtube.com/live/rUxyKA_-grg?si=94qsl5CFsnun_ukC' },
+            // Add more streams as needed
+        ];
+
+        let player;
+        let isPlayerReady = false;
+        let currentVideoIndex = 0;
+        let isLooping = false;
+        let isShuffle = false;
+        let loadingAttempts = 0;
+        const MAX_LOADING_ATTEMPTS = 3;
+
+        // Initialize audio visualizer
+        function initializeVisualizer() {
+            const visualizer = document.getElementById('visualizer');
+            for (let i = 0; i < 16; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'visualizer-bar';
+                visualizer.appendChild(bar);
+            }
+        }
+
+        function updateVisualizer() {
+            document.querySelectorAll('.visualizer-bar').forEach(bar => {
+                bar.style.height = `${Math.random() * 100}px`;
+            });
+        }
+
+        function onYouTubeIframeAPIReady() {
+            initializePlayer();
+        }
+
+        function initializePlayer() {
+            try {
+                player = new YT.Player('player', {
+                    height: '100%',
+                    width: '100%',
+                    playerVars: {
+                        playsinline: 1,
+                        controls: 0,
+                        disablekb: 1,
+                        modestbranding: 1,
+                        rel: 0,
+                        autoplay: 1,
+                    },
+                    events: {
+                        onReady: onPlayerReady,
+                        onStateChange: onPlayerStateChange,
+                        onError: onPlayerError
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing player:', error);
+                retryInitialization();
+            }
+        }
+
+        function onPlayerReady(event) {
+            isPlayerReady = true;
+            populateVideoList();
+            const savedIndex = localStorage.getItem('currentVideoIndex');
+            if (savedIndex !== null) {
+                currentVideoIndex = parseInt(savedIndex);
+            }
+            loadVideo(liveStreams [currentVideoIndex].url);
+            setInterval(updateVisualizer, 100);
+            setInterval(updateProgressBar, 1000);
+        }
+
+        function onPlayerStateChange(event) {
+            const { data } = event;
+            const isPlaying = data === YT.PlayerState.PLAYING;
+            document.getElementById('play').style.display = isPlaying ? 'none' : 'inline-flex';
+            document.getElementById('pause').style.display = isPlaying ? 'inline-flex' : 'none';
+
+            if (data === YT.PlayerState.ENDED) {
+                if (isLooping) loadVideo(liveStreams[currentVideoIndex].url);
+                else if (isShuffle) playRandomTrack();
+                else playNextTrack();
+            }
+
+            if (isPlaying) {
+                document.getElementById('current-track').textContent = liveStreams[currentVideoIndex].name;
+            }
+        }
+
+        function loadVideo(url) {
+            if (!isPlayerReady) {
+                console.log('Player not ready, retrying...');
+                setTimeout(() => loadVideo(url), 1000);
+                return;
+            }
+
+            try {
+                const videoId = url.split('/live/')[1].split('?')[0];
+                player.loadVideoById(videoId);
+                updateActiveTrack();
+                localStorage.setItem('currentVideoIndex', currentVideoIndex);
+            } catch (error) {
+                console.error('Error loading video:', error);
+                if (loadingAttempts < MAX_LOADING_ATTEMPTS) {
+                    loadingAttempts++;
+                    setTimeout(() => loadVideo(url), 2000);
+                }
+            }
+        }
+
+        function populateVideoList() {
+            const videoItems = document.getElementById('videoItems');
+            videoItems.innerHTML = '';
+            liveStreams.forEach((stream, index) => {
+                const li = document.createElement('li');
+                li.textContent = stream.name;
+                li.addEventListener('click', () => {
+                    currentVideoIndex = index;
+                    loadVideo(stream.url);
+                });
+                videoItems.appendChild(li);
+            });
+            updateActiveTrack();
+        }
+
+        function updateActiveTrack() {
+            const items = document.querySelectorAll('#videoItems li');
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === currentVideoIndex);
+            });
+        }
+
+        function playNextTrack() {
+            currentVideoIndex = (currentVideoIndex + 1) % liveStreams.length;
+            loadVideo(liveStreams[currentVideoIndex].url);
+        }
+
+        function playPreviousTrack() {
+            currentVideoIndex = (currentVideoIndex - 1 + liveStreams.length) % liveStreams.length;
+            loadVideo(liveStreams[currentVideoIndex].url);
+        }
+
+        function playRandomTrack() {
+            const randomIndex = Math.floor(Math.random() * liveStreams.length);
+            currentVideoIndex = randomIndex;
+            loadVideo(liveStreams[currentVideoIndex].url);
+        }
+
+        function updateProgressBar() {
+            if (isPlayerReady && player.getCurrentTime && player.getDuration) {
+                const currentTime = player.getCurrentTime() || 0;
+                const duration = player.getDuration() || 1;
+                const progress = (currentTime / duration) * 100;
+                document.getElementById('progress-bar-fill').style.width = `${progress}%`;
+            }
+        }
+
+        function updateVolumeIcon(volume) {
+            const icon = document.getElementById('volume').querySelector('i');
+            icon.className = 'fas';
+            icon.classList.add(volume === 0 ? 'fa-volume-mute' : volume < 50 ? 'fa-volume-down' : 'fa-volume-up');
+        }
+
+        function handleVolumeChange(volume) {
+            player.setVolume(volume);
+            document.getElementById('volume-slider').value = volume;
+            updateVolumeIcon(volume);
+        }
+
+        document.getElementById('volume-slider').addEventListener('input', function () {
+            handleVolumeChange(parseInt(this.value));
+        });
+
+        document.getElementById('volume').addEventListener('click', function () {
+            const currentVolume = player.getVolume();
+            handleVolumeChange(currentVolume > 0 ? 0 : 50);
+        });
+
+        document.getElementById('previous').addEventListener('click', playPreviousTrack);
+        document.getElementById('next').addEventListener('click', playNextTrack);
+        document.getElementById('play').addEventListener('click', () => player.playVideo());
+        document.getElementById('pause').addEventListener('click', () => player.pauseVideo());
+        document.getElementById('loop').addEventListener('click', function () {
+            isLooping = !isLooping;
+            this.classList.toggle('control-active');
+            if (isLooping) {
+                isShuffle = false;
+                document.getElementById('shuffle').classList.remove('control-active');
+            }
+        });
+        document.getElementById('shuffle').addEventListener('click', function () {
+            isShuffle = !isShuffle;
+            this.classList.toggle('control-active');
+            if (isShuffle) {
+                isLooping = false;
+                document.getElementById('loop').classList.remove('control-active');
+            }
+        });
+
+        initializeVisualizer();
+    </script>
+</body>
+</html>
